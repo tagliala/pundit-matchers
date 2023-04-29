@@ -32,10 +32,3 @@ Style/FrozenStringLiteralComment:
   Exclude:
     - 'Gemfile'
     - 'Rakefile'
-    - 'lib/pundit/matchers.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: Mode.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/pundit/matchers.rb'

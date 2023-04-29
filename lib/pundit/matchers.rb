@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec/core'
 
 module Pundit
@@ -31,6 +33,10 @@ module Pundit
       end
     end
 
+    def user
+      policy.public_send(Pundit::Matchers.configuration.user_alias)
+    end
+
     RSpec::Matchers.define :forbid_action do |action, *args, **kwargs|
       match do |policy|
         if args.any?
@@ -41,15 +47,11 @@ module Pundit
       end
 
       failure_message do |policy|
-        "#{policy.class} does not forbid #{action} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+        "#{policy.class} does not forbid #{action} for #{user.inspect}."
       end
 
       failure_message_when_negated do |policy|
-        "#{policy.class} does not permit #{action} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+        "#{policy.class} does not permit #{action} for #{user.inspect}."
       end
     end
   end
@@ -75,9 +77,7 @@ module Pundit
         zero_actions_failure_message
       else
         "#{policy.class} expected to forbid #{actions}, but allowed " \
-        "#{allowed_actions} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "#{allowed_actions} for #{user.inspect}."
       end
     end
 
@@ -86,9 +86,7 @@ module Pundit
         zero_actions_failure_message
       else
         "#{policy.class} expected to permit #{actions}, but forbade " \
-        "#{allowed_actions} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "#{allowed_actions} for #{user.inspect}."
       end
     end
   end
@@ -99,15 +97,11 @@ module Pundit
     end
 
     failure_message do |policy|
-      "#{policy.class} does not forbid the edit or update action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not forbid the edit or update action for #{user.inspect}."
     end
 
     failure_message_when_negated do |policy|
-      "#{policy.class} does not permit the edit or update action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not permit the edit or update action for #{user.inspect}."
     end
   end
 
@@ -143,17 +137,13 @@ module Pundit
         zero_attributes_failure_message
       elsif defined? @action
         "#{policy.class} expected to forbid the mass assignment of the " \
-        "attributes #{attributes} when authorising the #{@action} action, " \
-        'but allowed the mass assignment of the attributes ' \
-        "#{allowed_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes} when authorising the #{@action} action, " \
+          'but allowed the mass assignment of the attributes ' \
+          "#{allowed_attributes} for #{user.inspect}."
       else
         "#{policy.class} expected to forbid the mass assignment of the " \
-        "attributes #{attributes}, but allowed the mass assignment of " \
-        "the attributes #{allowed_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes}, but allowed the mass assignment of " \
+          "the attributes #{allowed_attributes} for #{user.inspect}."
       end
     end
 
@@ -162,17 +152,13 @@ module Pundit
         zero_attributes_failure_message
       elsif defined? @action
         "#{policy.class} expected to permit the mass assignment of the " \
-        "attributes #{attributes} when authorising the #{@action} action, " \
-        'but permitted the mass assignment of the attributes ' \
-        "#{allowed_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes} when authorising the #{@action} action, " \
+          'but permitted the mass assignment of the attributes ' \
+          "#{allowed_attributes} for #{user.inspect}."
       else
         "#{policy.class} expected to permit the mass assignment of the " \
-        "attributes #{attributes}, but permitted the mass assignment of " \
-        "the attributes #{allowed_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes}, but permitted the mass assignment of " \
+          "the attributes #{allowed_attributes} for #{user.inspect}."
       end
     end
   end
@@ -183,15 +169,11 @@ module Pundit
     end
 
     failure_message do |policy|
-      "#{policy.class} does not forbid the new or create action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not forbid the new or create action for #{user.inspect}."
     end
 
     failure_message_when_negated do |policy|
-      "#{policy.class} does not permit the new or create action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not permit the new or create action for #{user.inspect}."
     end
   end
 
@@ -205,15 +187,11 @@ module Pundit
     end
 
     failure_message do |policy|
-      "#{policy.class} does not permit #{action} for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not permit #{action} for #{user.inspect}."
     end
 
     failure_message_when_negated do |policy|
-      "#{policy.class} does not forbid #{action} for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not forbid #{action} for #{user.inspect}."
     end
   end
 
@@ -259,9 +237,7 @@ module Pundit
         zero_actions_failure_message
       else
         "#{policy.class} expected to permit #{actions}, but forbade " \
-        "#{forbidden_actions} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "#{forbidden_actions} for #{user.inspect}."
       end
     end
 
@@ -270,9 +246,7 @@ module Pundit
         zero_actions_failure_message
       else
         "#{policy.class} expected to forbid #{actions}, but allowed " \
-        "#{forbidden_actions} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "#{forbidden_actions} for #{user.inspect}."
       end
     end
   end
@@ -283,15 +257,11 @@ module Pundit
     end
 
     failure_message do |policy|
-      "#{policy.class} does not permit the edit or update action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not permit the edit or update action for #{user.inspect}."
     end
 
     failure_message_when_negated do |policy|
-      "#{policy.class} does not forbid the edit or update action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not forbid the edit or update action for #{user.inspect}."
     end
   end
 
@@ -327,17 +297,13 @@ module Pundit
         zero_attributes_failure_message
       elsif defined? @action
         "#{policy.class} expected to permit the mass assignment of the " \
-        "attributes #{attributes} when authorising the #{@action} action, " \
-        'but forbade the mass assignment of the attributes ' \
-        "#{forbidden_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes} when authorising the #{@action} action, " \
+          'but forbade the mass assignment of the attributes ' \
+          "#{forbidden_attributes} for #{user.inspect}."
       else
         "#{policy.class} expected to permit the mass assignment of the " \
-        "attributes #{attributes}, but forbade the mass assignment of the " \
-        "attributes #{forbidden_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes}, but forbade the mass assignment of the " \
+          "attributes #{forbidden_attributes} for #{user.inspect}."
       end
     end
 
@@ -346,17 +312,13 @@ module Pundit
         zero_attributes_failure_message
       elsif defined? @action
         "#{policy.class} expected to forbid the mass assignment of the " \
-        "attributes #{attributes} when authorising the #{@action} action, " \
-        'but forbade the mass assignment of the attributes ' \
-        "#{forbidden_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes} when authorising the #{@action} action, " \
+          'but forbade the mass assignment of the attributes ' \
+          "#{forbidden_attributes} for #{user.inspect}."
       else
         "#{policy.class} expected to forbid the mass assignment of the " \
-        "attributes #{attributes}, but forbade the mass assignment of the " \
-        "attributes #{forbidden_attributes} for " +
-          policy.public_send(Pundit::Matchers.configuration.user_alias)
-                .inspect + '.'
+          "attributes #{attributes}, but forbade the mass assignment of the " \
+          "attributes #{forbidden_attributes} for #{user.inspect}."
       end
     end
   end
@@ -367,15 +329,11 @@ module Pundit
     end
 
     failure_message do |policy|
-      "#{policy.class} does not permit the new or create action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not permit the new or create action for #{user.inspect}."
     end
 
     failure_message_when_negated do |policy|
-      "#{policy.class} does not forbid the new or create action for " +
-        policy.public_send(Pundit::Matchers.configuration.user_alias)
-              .inspect + '.'
+      "#{policy.class} does not forbid the new or create action for #{user.inspect}."
     end
   end
 
