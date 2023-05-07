@@ -6,47 +6,19 @@ module Pundit
   module Matchers
     module PermitActions
       def permit_action(action)
-        PermitActionsMatcher.new(action)
+        ActionsMatcher.new(:permit, action)
       end
 
       def permit_actions(*actions)
-        PermitActionsMatcher.new(*actions)
+        ActionsMatcher.new(:permit, *actions)
       end
 
       def permit_new_and_create_actions
-        PermitActionsMatcher.new(:new, :create)
+        ActionsMatcher.new(:permit, :new, :create)
       end
 
       def permit_edit_and_update_actions
-        PermitActionsMatcher.new(:edit, :update)
-      end
-
-      class PermitActionsMatcher < Pundit::Matchers::ActionsMatcher
-        def matches?(policy)
-          super
-
-          @actual_actions = expected_actions.reject do |action|
-            policy.public_send(:"#{action}?")
-          end
-
-          actual_actions.empty?
-        end
-
-        private
-
-        def check_arguments!
-          super
-
-          raise ArgumentError, ARGUMENTS_REQUIRED_ERROR if expected_actions.count < 1
-        end
-
-        def verb
-          'permit'
-        end
-
-        def other_verb
-          'forbade'
-        end
+        ActionsMatcher.new(:permit, :edit, :update)
       end
     end
   end
