@@ -11,13 +11,11 @@ module Pundit
       VERBS = {
         permit: {
           expected: 'permit',
-          expected_when_negated: 'not to permit',
           actual: 'forbade',
           actual_when_negated: 'permitted'
         },
         forbid: {
           expected: 'forbid',
-          expected_when_negated: 'not to forbid',
           actual: 'permitted',
           actual_when_negated: 'forbade'
         }
@@ -85,7 +83,7 @@ module Pundit
 
       def unexpected_text
         if actual_actions.empty?
-          " but did not #{verb} actions"
+          " but did not #{VERBS.dig(type, :actual_when_negated)} actions"
         else
           " but #{VERBS.dig(type, :actual)} #{actual_actions}"
         end
@@ -96,15 +94,6 @@ module Pundit
         return if missing_actions.empty?
 
         raise ArgumentError, format(POLICY_DOES_NOT_IMPLEMENT_ERROR, actions: missing_actions)
-      end
-
-      def other_type
-        @other_type =
-          if type == :permit
-            :forbid
-          else
-            :permit
-          end
       end
     end
   end
