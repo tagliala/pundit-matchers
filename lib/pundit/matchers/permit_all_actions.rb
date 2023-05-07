@@ -6,27 +6,7 @@ module Pundit
   module Matchers
     module PermitAllActions
       def permit_all_actions
-        PermitAllActionsMatcher.new
-      end
-
-      class PermitAllActionsMatcher < Pundit::Matchers::AllActionsMatcher
-        def matches?(policy)
-          super
-
-          @actual_actions = policy_info.actions - policy_info.permitted_actions
-
-          actual_actions.empty?
-        end
-
-        private
-
-        def verb
-          'permit'
-        end
-
-        def other_verb
-          'forbade'
-        end
+        AllActionsMatcher.new(:permit)
       end
     end
   end
