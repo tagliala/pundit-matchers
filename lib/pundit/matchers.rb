@@ -4,14 +4,7 @@ require 'rspec/core'
 
 module Pundit
   module Matchers
-    require_relative 'matchers/forbid_actions'
-    require_relative 'matchers/permit_actions'
-
-    require_relative 'matchers/forbid_all_actions'
-    require_relative 'matchers/permit_all_actions'
-
-    require_relative 'matchers/forbid_only_actions'
-    require_relative 'matchers/permit_only_actions'
+    require_relative 'matchers/actions'
 
     class Configuration
       attr_accessor :user_alias
@@ -33,12 +26,7 @@ module Pundit
   end
 
   ::RSpec.configure do |config|
-    config.include Pundit::Matchers::PermitActions
-    config.include Pundit::Matchers::ForbidActions
-    config.include Pundit::Matchers::ForbidAllActions
-    config.include Pundit::Matchers::PermitAllActions
-    config.include Pundit::Matchers::ForbidOnlyActions
-    config.include Pundit::Matchers::PermitOnlyActions
+    config.include Pundit::Matchers::Actions
   end
 
   RSpec::Matchers.define :forbid_mass_assignment_of do |attributes|

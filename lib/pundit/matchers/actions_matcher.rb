@@ -66,10 +66,7 @@ module Pundit
       end
 
       def failure_message_when_negated
-        message = +"#{policy_info} expected to #{description},"
-        message << unexpected_text
-        message << " for #{policy_info.user.inspect}."
-        message
+        failure_message
       end
 
       private

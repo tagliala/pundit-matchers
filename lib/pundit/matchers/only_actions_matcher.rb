@@ -12,7 +12,8 @@ module Pundit
       def does_not_match?(policy)
         return does_not_match?(policy) if type == :permit
 
-        super
+        setup_matcher! policy
+        check_arguments!
 
         @actual_actions = policy_info.forbidden_actions - expected_actions
         @unexpected_actions = policy_info.permitted_actions & expected_actions
@@ -23,7 +24,8 @@ module Pundit
       def matches?(policy)
         return does_not_match?(policy) if type == :forbid
 
-        super
+        setup_matcher! policy
+        check_arguments!
 
         @actual_actions = policy_info.permitted_actions - expected_actions
         @unexpected_actions = policy_info.forbidden_actions & expected_actions
