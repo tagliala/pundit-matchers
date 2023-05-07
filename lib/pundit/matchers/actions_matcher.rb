@@ -7,6 +7,7 @@ module Pundit
     class ActionsMatcher
       ARGUMENTS_REQUIRED_ERROR = 'At least one action must be specified'
       POLICY_DOES_NOT_IMPLEMENT_ERROR = 'Policy does not implement %<actions>s'
+      NEGATED_MATCHER_ERROR = 'Negated matchers are not supported. Please use `to permit` instead of `not_to forbid`'
 
       def initialize(*expected_actions)
         @expected_actions = expected_actions.flatten.sort
@@ -17,13 +18,11 @@ module Pundit
       end
 
       def does_not_match?(*)
-        raise 'Negated matcher is not supported'
+        raise ArgumentError, NEGATED_MATCHER_ERROR
       end
 
       def matches?(policy)
-        @policy = policy
-        @policy_info = Pundit::Matchers::Utils::PolicyInfo.new(policy)
-
+        setup_matcher! policy
         check_arguments!
       end
 
@@ -37,6 +36,11 @@ module Pundit
       private
 
       attr_reader :expected_actions, :actual_actions, :policy, :policy_info
+
+      def setup_matcher!(policy)
+        @policy = policy
+        @policy_info = Pundit::Matchers::Utils::PolicyInfo.new(policy)
+      end
 
       def unexpected_text
         if actual_actions.empty?
