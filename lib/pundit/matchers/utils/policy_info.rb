@@ -3,12 +3,30 @@
 module Pundit
   module Matchers
     module Utils
-      # Collects all details about given policy class.
+      # Collects information about a given policy class.
       class PolicyInfo
+        USER_NOT_IMPLEMENTED_ERROR = <<~MSG
+          '%<policy>s' does not implement '%<user_alias>s'. You may want to
+          configure an alias, which you can do as follows:
+
+          Pundit::Matchers.configure do |config|
+            config.user_alias = :account
+          end
+        MSG
+
         attr_reader :policy
 
         def initialize(policy)
           @policy = policy
+          check_user_alias!
+        end
+
+        def to_s
+          policy.class.name
+        end
+
+        def user
+          @user ||= policy.public_send(user_alias)
         end
 
         def actions
@@ -23,7 +41,19 @@ module Pundit
         end
 
         def forbidden_actions
-          actions - permitted_actions
+          @forbidden_actions ||= actions - permitted_actions
+        end
+
+        private
+
+        def user_alias
+          @user_alias ||= Pundit::Matchers.configuration.user_alias
+        end
+
+        def check_user_alias!
+          return if policy.respond_to?(user_alias)
+
+          raise ArgumentError, format(USER_NOT_IMPLEMENTED_ERROR, policy: self, user_alias: user_alias)
         end
       end
     end
